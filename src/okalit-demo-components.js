@@ -181,11 +181,33 @@ export class OkalitDemoComponents extends Okalit {
   get _tabsDetail() {
     return html`
       <div class="tabs">
-        <button @click="${() => this.currentTab.value = 'props'}">Props</button>
-        <button @click="${() => this.currentTab.value = 'slots'}">Slots</button>
-        <button @click="${() => this.currentTab.value = 'events'}">Events</button>
-        <button @click="${() => this.currentTab.value = 'channels'}">Channels</button>
-        <button @click="${() => this.currentTab.value = 'example'}">Example</button>
+        <button class="${this.currentTab.value === 'props' ? 'active' : ''}" @click="${() => this.currentTab.value = 'props'}">Props</button>
+        <button class="${this.currentTab.value === 'slots' ? 'active' : ''}" @click="${() => this.currentTab.value = 'slots'}">Slots</button>
+        <button class="${this.currentTab.value === 'events' ? 'active' : ''}" @click="${() => this.currentTab.value = 'events'}">Events</button>
+        <button class="${this.currentTab.value === 'channels' ? 'active' : ''}" @click="${() => this.currentTab.value = 'channels'}">Channels</button>
+        <button class="${this.currentTab.value === 'example' ? 'active' : ''}" @click="${() => this.currentTab.value = 'example'}">Example</button>
+        <button class="${this.currentTab.value === 'doc' ? 'active' : ''} doc-button" @click="${() => this.currentTab.value = 'doc'}">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6 2H14L19 7V20C19 21.1046 18.1046 22 17 22H6C4.89543 22 4 21.1046 4 20V4C4 2.89543 4.89543 2 6 2Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M14 2V7H19"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+          </svg> <span>Create Doc</span>
+        </button>
       </div>
     `;
   }
@@ -330,7 +352,138 @@ export class OkalitDemoComponents extends Okalit {
       ${this.currentTab.value === 'events' ? this._getDetailEvents : ''}
       ${this.currentTab.value === 'channels' ? this._getDetailChannels : ''}
       ${this.currentTab.value === 'example' ? this._getDetailExample : ''}
+      ${this.currentTab.value === 'doc' ? this._getDetailReadme : ''}
     `;
+  }
+
+  _generateReadme() {
+    const comp = this.currentComponent.value;
+    if (!comp) return '';
+
+    const tag = comp.tag;
+    const name = comp.name;
+    const description = comp.description || '';
+    const registryUrl = 'github.com/your-org/your-catalog';
+
+    let md = `# ${name}\n\n`;
+    md += `${description}\n\n`;
+
+    // Install section
+    md += `## Installation\n\n`;
+    md += `\`\`\`bash\n`;
+    md += `okalit add ${tag} --registry ${registryUrl}\n`;
+    md += `\`\`\`\n\n`;
+    md += `Or manually copy to your project:\n\n`;
+    md += `\`\`\`bash\n`;
+    md += `# The component will be installed in src/catalogs/${tag}/\n`;
+    md += `\`\`\`\n\n`;
+
+    // Usage section
+    md += `## Usage\n\n`;
+    md += `\`\`\`js\n`;
+    md += `import '@catalogs/${tag}/${tag}.js';\n`;
+    md += `\`\`\`\n\n`;
+
+    // Example
+    const attrs = comp.props.map(prop => {
+      const [propName, config] = Object.entries(prop)[0];
+      return `  ${propName}="${config.value}"`;
+    });
+    const events = (comp.events || []).map(ev => `  @${ev}="\${handler}"`);
+    const lines = [...attrs, ...events];
+    const slotContent = (comp.slots || []).map(slot => {
+      if (slot.name === 'default') return `  ${slot.content}`;
+      return `  <span slot="${slot.name}">${slot.content}</span>`;
+    }).join('\n');
+
+    md += `\`\`\`html\n`;
+    md += `<${tag}`;
+    if (lines.length) md += `\n${lines.join('\n')}\n`;
+    md += `>`;
+    if (slotContent) md += `\n${slotContent}\n`;
+    md += `</${tag}>\n`;
+    md += `\`\`\`\n\n`;
+
+    // Props table
+    if (comp.props.length) {
+      md += `## Props\n\n`;
+      md += `| Name | Type | Default |\n`;
+      md += `|------|------|---------|\n`;
+      for (const prop of comp.props) {
+        const [propName, config] = Object.entries(prop)[0];
+        md += `| \`${propName}\` | \`${config.type.name}\` | \`${JSON.stringify(config.value)}\` |\n`;
+      }
+      md += `\n`;
+    }
+
+    // Slots
+    const slots = comp.slots || [];
+    if (slots.length) {
+      md += `## Slots\n\n`;
+      md += `| Name | Description |\n`;
+      md += `|------|-------------|\n`;
+      for (const slot of slots) {
+        md += `| \`${slot.name}\` | ${slot.description || '-'} |\n`;
+      }
+      md += `\n`;
+    }
+
+    // Events
+    if (comp.events?.length) {
+      md += `## Events\n\n`;
+      md += `| Name |\n`;
+      md += `|------|\n`;
+      for (const ev of comp.events) {
+        md += `| \`${ev}\` |\n`;
+      }
+      md += `\n`;
+    }
+
+    // Channels
+    if (comp.channels?.length) {
+      md += `## Channels\n\n`;
+      md += `This component subscribes to the following channels:\n\n`;
+      for (const ch of comp.channels) {
+        md += `- \`${ch}\`\n`;
+      }
+      md += `\n`;
+      md += `> Make sure these channels are defined in your application.\n\n`;
+    }
+
+    // License
+    md += `## License\n\nMIT\n`;
+
+    return md;
+  }
+
+  _downloadReadme() {
+    const content = this._generateReadme();
+    const blob = new Blob([content], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'README.md';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  get _getDetailReadme() {
+    const readme = this._generateReadme();
+    return html`
+      <div class="doc-section">
+        <div class="doc-actions">
+          <button class="doc-btn" @click="${() => this._downloadReadme()}">⬇ Download README.md</button>
+          <button class="doc-btn" @click="${() => this._copyReadme()}">📋 Copy</button>
+        </div>
+        <pre class="code-example doc-preview"><code>${readme}</code></pre>
+      </div>
+    `;
+  }
+
+  _copyReadme() {
+    const content = this._generateReadme();
+    navigator.clipboard.writeText(content);
+    this._showToast('clipboard', 'README.md copied!');
   }
 
   get _details() {
