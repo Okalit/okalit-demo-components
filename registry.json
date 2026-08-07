@@ -1,0 +1,8 @@
+{
+  "name": "okalit-demo-components",
+  "description": "",
+  "tag": "okalit-demo-components",
+  "files": ["okalit-demo-components.js", "okalit-demo-components.css"],
+  "channels": [],
+  "dependencies": []
+}

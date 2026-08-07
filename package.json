@@ -1,0 +1,40 @@
+{
+  "name": "@okalit/demo-components",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "main": "./src/okalit-demo-components.js",
+  "exports": {
+    ".": "./src/okalit-demo-components.js",
+    "./styles": "./src/okalit-demo-components.css"
+  },
+  "files": [
+    "src/okalit-demo-components.js",
+    "src/okalit-demo-components.css"
+  ],
+  "scripts": {
+    "dev": "rsbuild dev",
+    "lint": "biome check ./src",
+    "lint:fix": "biome check --write ./src"
+  },
+  "peerDependencies": {
+    "@okalit/core": ">=0.1.0",
+    "lit": "^3.0.0",
+    "uhtml": "^5.0.9"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/plugin-proposal-decorators": "^7.29.0",
+    "@babel/preset-env": "^7.29.0",
+    "@biomejs/biome": "2.4.11",
+    "@okalit/core": "^0.1.7",
+    "@rsbuild/core": "^1.7.5",
+    "@rsbuild/plugin-babel": "^1.1.2",
+    "@rsbuild/plugin-sass": "^1.5.1",
+    "lit": "^3.0.0",
+    "uhtml": "^5.0.9"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
