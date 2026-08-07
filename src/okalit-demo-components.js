@@ -17,7 +17,7 @@ import styles from "./okalit-demo-components.css?inline";
 export class OkalitDemoComponents extends Okalit {
 
   resolutions = signal("mobile");
-  deviceTheme = signal("light");
+  deviceTheme = signal("dark");
   currentComponent = signal(null);
   currentTab = signal("props");
   componentLoaded = signal(false);

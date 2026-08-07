@@ -2,17 +2,15 @@
   display: block;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  --bg-primary: #f8f7fc;
-  --bg-secondary: #ffffff;
-  --bg-surface: #ede9f6;
+  --bg-primary: #101316;
+  --bg-secondary: #161b22;
+  --bg-surface: #1c2128;
   --accent: #7c3aed;
   --accent-dim: #6d28d9;
-  --accent-glow: rgba(124, 58, 237, 0.08);
-  --border: rgba(124, 58, 237, 0.2);
-  --text-primary: #1e1b4b;
-  --text-secondary: #4b5563;
-  --gradient-1: rgba(124, 58, 237, 0.04);
-  --gradient-2: rgba(99, 50, 200, 0.03);
+  --accent-glow: rgba(124, 58, 237, 0.15);
+  --border: rgba(139, 148, 158, 0.2);
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
 
   color: var(--text-primary);
 }
@@ -23,9 +21,6 @@ main {
   display: flex;
   gap: 2rem;
   background: var(--bg-primary);
-  background-image:
-    radial-gradient(ellipse at 20% 50%, var(--gradient-1) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 20%, var(--gradient-2) 0%, transparent 50%);
 }
 
 h1 {
@@ -69,26 +64,28 @@ p {
   align-items: center;
   justify-content: center;
   background: #ffffff;
-  box-shadow: 0 0 30px var(--accent-glow), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
   transition: background 0.3s ease, color 0.3s ease;
   color: #1e1b4b;
 }
 
 .content > .device.device-dark {
-  background: #0b0b1a;
-  color: #f1f5f9;
+  background: #0d1117;
+  color: #e6edf3;
   border-color: rgba(139, 92, 246, 0.3);
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  box-shadow: 0 0 40px rgba(139, 92, 246, 0.1);
 }
 
 .content > .mobile {
   width: 25vw;
   height: 80vh;
+  min-width: 24rem;
 }
 
 .content > .tablet {
   width: 40vw;
   height: 80vh;
+  min-width: 40rem;
 }
 
 .content > .fullscreen {
@@ -100,6 +97,7 @@ p {
   width: stretch;
   padding: 2rem;
   overflow-y: auto;
+  border-left: 1px solid var(--border);
 }
 
 .prop {
@@ -179,7 +177,7 @@ tbody tr:hover {
 
 .row input[type="text"],
 .row input[type="number"] {
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 0.35rem 0.6rem;
@@ -204,7 +202,7 @@ tbody tr:hover {
 }
 
 .slot-input {
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 0.4rem 0.6rem;
@@ -245,8 +243,8 @@ tbody tr:hover {
 }
 
 .code-example {
-  background: #1e1b2e;
-  color: #e2e8f0;
+  background: #0d1117;
+  color: #e6edf3;
   border-radius: 10px;
   padding: 1rem 1.25rem;
   font-family: 'SF Mono', 'Fira Code', monospace;
@@ -254,7 +252,7 @@ tbody tr:hover {
   line-height: 1.6;
   overflow-x: auto;
   margin: 0;
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid var(--border);
 }
 
 .toast-container {
@@ -273,7 +271,7 @@ tbody tr:hover {
   border-left: 3px solid var(--accent);
   border-radius: 8px;
   padding: 0.75rem 1rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   animation: toast-in 0.3s ease, toast-out 0.3s ease 3.7s forwards;
   max-width: 360px;
 }
@@ -341,4 +339,10 @@ tbody tr:hover {
 .doc-button > span {
   margin-top: 0.4rem;
   margin-left: 0.4rem;
+}
+
+@media screen and (width <= 1200px) {
+  .details {
+    display: none;
+  }
 }
