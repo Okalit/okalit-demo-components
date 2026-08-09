@@ -262,51 +262,94 @@ tbody tr:hover {
   border: 1px solid var(--border);
 }
 
-.toast-container {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
+.console-panel {
   display: flex;
-  flex-direction: column-reverse;
-  gap: 0.5rem;
-  z-index: 9999;
+  flex-direction: column;
+  height: 100%;
+  max-height: 70vh;
 }
 
-.toast {
-  background: var(--bg-secondary);
+.console-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+
+.console-clear {
+  font-size: 0.72rem;
+  padding: 0.3rem 0.7rem;
+}
+
+.console-logs {
+  overflow-y: auto;
+  background: #21222c;
   border: 1px solid var(--border);
-  border-left: 3px solid var(--green);
   border-radius: 8px;
-  padding: 0.75rem 1rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  animation: toast-in 0.3s ease, toast-out 0.3s ease 3.7s forwards;
-  max-width: 360px;
+  padding: 0.75rem;
+  flex: 1;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.78rem;
 }
 
-.toast-event {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--cyan);
-  font-family: monospace;
-}
-
-.toast-detail {
-  margin: 0.25rem 0 0;
-  font-size: 0.8rem;
+.console-empty {
   color: var(--text-secondary);
-  font-family: monospace;
+  font-style: italic;
+}
+
+.console-entry {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid rgba(98, 114, 164, 0.2);
+  flex-wrap: wrap;
+}
+
+.console-entry:last-child {
+  border-bottom: none;
+}
+
+.console-time {
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  min-width: 5rem;
+}
+
+.console-type {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+
+.console-type--event {
+  background: rgba(80, 250, 123, 0.15);
+  color: var(--green);
+}
+
+.console-type--channel {
+  background: rgba(139, 233, 253, 0.15);
+  color: var(--cyan);
+}
+
+.console-type--info {
+  background: rgba(255, 184, 108, 0.15);
+  color: var(--orange);
+}
+
+.console-name {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.console-detail {
+  margin: 0.2rem 0 0;
+  width: 100%;
+  padding-left: 5.5rem;
+  color: var(--text-secondary);
   white-space: pre-wrap;
   word-break: break-all;
-}
-
-@keyframes toast-in {
-  from { opacity: 0; transform: translateY(1rem); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes toast-out {
-  from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(1rem); }
 }
 
 .doc-section {

@@ -23,7 +23,7 @@ export class OkalitDemoComponents extends Okalit {
   componentLoaded = signal(false);
   propValues = signal({});
   slotValues = signal({});
-  toasts = signal([]);
+  consoleLogs = signal([]);
   _eventCleanups = [];
   _previewEl = null;
   _previewTag = null;
@@ -51,25 +51,31 @@ export class OkalitDemoComponents extends Okalit {
     this.slotValues.value = { ...this.slotValues.value, [name]: value };
   }
 
-  _showToast(eventName, detail) {
-    const toast = {
-      id: Date.now(),
-      eventName,
-      detail: detail !== undefined ? JSON.stringify(detail, null, 2) : 'void',
+  _logToConsole(type, name, detail) {
+    const entry = {
+      id: Date.now() + Math.random(),
+      type,
+      name,
+      detail: detail !== undefined ? JSON.stringify(detail, null, 2) : undefined,
+      time: new Date().toLocaleTimeString(),
     };
-
-    this.toasts.value = [...this.toasts.value, toast];
-
-    setTimeout(() => {
-      this.toasts.value = this.toasts.value.filter(t => t.id !== toast.id);
-    }, 4000);
+    this.consoleLogs.value = [...this.consoleLogs.value, entry];
   }
 
   _attachEventListeners(el, comp) {
     this._cleanupEventListeners();
 
     for (const eventName of (comp.events || [])) {
-      const handler = (e) => this._showToast(eventName, e.detail);
+      const handler = (e) => {
+        this._logToConsole('event', eventName, e.detail);
+        if (e.detail && typeof e.detail === 'object') {
+          for (const [key, val] of Object.entries(e.detail)) {
+            if (key in this.propValues.value) {
+              this._updatePropValue(key, val);
+            }
+          }
+        }
+      };
       el.addEventListener(eventName, handler);
       this._eventCleanups.push(() => el.removeEventListener(eventName, handler));
     }
@@ -168,15 +174,24 @@ export class OkalitDemoComponents extends Okalit {
     return html`${el}`;
   }
 
-  get _toasts() {
+  get _getDetailConsole() {
+    const logs = this.consoleLogs.value;
     return html`
-      <div class="toast-container">
-        ${this.toasts.value.map(toast => html`
-          <div class="toast">
-            <span class="toast-event">${toast.eventName}</span>
-            <pre class="toast-detail">${toast.detail}</pre>
-          </div>
-        `)}
+      <div class="console-panel">
+        <div class="console-toolbar">
+          <button class="console-clear" @click="${() => { this.consoleLogs.value = []; }}">Clear</button>
+        </div>
+        <div class="console-logs">
+          ${logs.length === 0 ? html`<span class="console-empty">No events logged yet. Interact with the component to see events here.</span>` : ''}
+          ${logs.map(entry => html`
+            <div class="console-entry">
+              <span class="console-time">${entry.time}</span>
+              <span class="console-type console-type--${entry.type}">${entry.type}</span>
+              <span class="console-name">${entry.name}</span>
+              ${entry.detail ? html`<pre class="console-detail">${entry.detail}</pre>` : ''}
+            </div>
+          `)}
+        </div>
       </div>
     `;
   }
@@ -199,6 +214,7 @@ export class OkalitDemoComponents extends Okalit {
         <button class="${this.currentTab.value === 'slots' ? 'active' : ''}" @click="${() => this.currentTab.value = 'slots'}">Slots</button>
         <button class="${this.currentTab.value === 'events' ? 'active' : ''}" @click="${() => this.currentTab.value = 'events'}">Events</button>
         <button class="${this.currentTab.value === 'channels' ? 'active' : ''}" @click="${() => this.currentTab.value = 'channels'}">Channels</button>
+        <button class="${this.currentTab.value === 'console' ? 'active' : ''}" @click="${() => this.currentTab.value = 'console'}">Console</button>
         <button class="${this.currentTab.value === 'example' ? 'active' : ''}" @click="${() => this.currentTab.value = 'example'}">Example</button>
         <button class="${this.currentTab.value === 'doc' ? 'active' : ''} doc-button" @click="${() => this.currentTab.value = 'doc'}">
           <svg
@@ -365,6 +381,7 @@ export class OkalitDemoComponents extends Okalit {
       ${this.currentTab.value === 'slots' ? this._getDetailSlots : ''}
       ${this.currentTab.value === 'events' ? this._getDetailEvents : ''}
       ${this.currentTab.value === 'channels' ? this._getDetailChannels : ''}
+      ${this.currentTab.value === 'console' ? this._getDetailConsole : ''}
       ${this.currentTab.value === 'example' ? this._getDetailExample : ''}
       ${this.currentTab.value === 'doc' ? this._getDetailReadme : ''}
     `;
@@ -497,7 +514,7 @@ export class OkalitDemoComponents extends Okalit {
   _copyReadme() {
     const content = this._generateReadme();
     navigator.clipboard.writeText(content);
-    this._showToast('clipboard', 'README.md copied!');
+    this._logToConsole('info', 'README.md copied!');
   }
 
   get _details() {
@@ -532,7 +549,6 @@ export class OkalitDemoComponents extends Okalit {
 
         ${this.resolutions.value !== 'fullscreen' ? this._details : ''}
       </main>
-      ${this._toasts}
     `;
   }
 }
