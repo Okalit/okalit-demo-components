@@ -25,6 +25,8 @@ export class OkalitDemoComponents extends Okalit {
   slotValues = signal({});
   toasts = signal([]);
   _eventCleanups = [];
+  _previewEl = null;
+  _previewTag = null;
 
   _initPropValues(comp) {
     const values = {};
@@ -96,6 +98,9 @@ export class OkalitDemoComponents extends Okalit {
 
   async _selectComponent(component) {
     this.componentLoaded.value = false;
+    this._previewEl = null;
+    this._previewTag = null;
+    this._cleanupEventListeners();
     this.currentComponent.value = component;
     this._initPropValues(component);
 
@@ -131,16 +136,27 @@ export class OkalitDemoComponents extends Okalit {
     }
 
     const comp = this.currentComponent.value;
-    const el = document.createElement(comp.tag);
 
+    if (!this._previewEl || this._previewTag !== comp.tag) {
+      this._previewEl = document.createElement(comp.tag);
+      this._previewTag = comp.tag;
+      this._attachEventListeners(this._previewEl, comp);
+    }
+
+    const el = this._previewEl;
+
+    // Sync attributes
     for (const [name, value] of Object.entries(this.propValues.value)) {
       if (typeof value === 'boolean') {
         if (value) el.setAttribute(name, '');
+        else el.removeAttribute(name);
       } else {
         el.setAttribute(name, value);
       }
     }
 
+    // Sync slots
+    el.innerHTML = '';
     for (const [name, content] of Object.entries(this.slotValues.value)) {
       if (!content) continue;
       const wrapper = document.createElement('span');
@@ -148,8 +164,6 @@ export class OkalitDemoComponents extends Okalit {
       if (name !== 'default') wrapper.setAttribute('slot', name);
       el.appendChild(wrapper);
     }
-
-    this._attachEventListeners(el, comp);
 
     return html`${el}`;
   }

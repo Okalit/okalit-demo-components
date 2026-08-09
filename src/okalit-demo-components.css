@@ -2,15 +2,21 @@
   display: block;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  --bg-primary: #101316;
-  --bg-secondary: #161b22;
-  --bg-surface: #1c2128;
-  --accent: #7c3aed;
-  --accent-dim: #6d28d9;
-  --accent-glow: rgba(124, 58, 237, 0.15);
-  --border: rgba(139, 148, 158, 0.2);
-  --text-primary: #e6edf3;
-  --text-secondary: #8b949e;
+  --bg-primary: #282a36;
+  --bg-secondary: #1e1f29;
+  --bg-surface: #44475a;
+  --accent: #bd93f9;
+  --accent-dim: #9d6ff5;
+  --accent-glow: rgba(189, 147, 249, 0.12);
+  --border: rgba(98, 114, 164, 0.4);
+  --text-primary: #f8f8f2;
+  --text-secondary: #6272a4;
+  --cyan: #8be9fd;
+  --green: #50fa7b;
+  --orange: #ffb86c;
+  --pink: #ff79c6;
+  --red: #ff5555;
+  --yellow: #f1fa8c;
 
   color: var(--text-primary);
 }
@@ -63,17 +69,18 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+  background: #f8f8f2;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
   transition: background 0.3s ease, color 0.3s ease;
-  color: #1e1b4b;
+  color: #282a36;
+  overflow: auto;
 }
 
 .content > .device.device-dark {
-  background: #0d1117;
-  color: #e6edf3;
-  border-color: rgba(139, 92, 246, 0.3);
-  box-shadow: 0 0 40px rgba(139, 92, 246, 0.1);
+  background: #21222c;
+  color: #f8f8f2;
+  border-color: rgba(189, 147, 249, 0.3);
+  box-shadow: 0 4px 24px rgba(189, 147, 249, 0.08);
 }
 
 .content > .mobile {
@@ -129,7 +136,7 @@ button:hover {
   background: var(--accent-dim);
   color: #ffffff;
   border-color: var(--accent);
-  box-shadow: 0 0 12px var(--accent-glow);
+  box-shadow: 0 0 10px var(--accent-glow);
 }
 
 button.active {
@@ -157,7 +164,7 @@ thead th {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--accent);
+  color: var(--pink);
 }
 
 tbody tr {
@@ -243,8 +250,8 @@ tbody tr:hover {
 }
 
 .code-example {
-  background: #0d1117;
-  color: #e6edf3;
+  background: #21222c;
+  color: #f8f8f2;
   border-radius: 10px;
   padding: 1rem 1.25rem;
   font-family: 'SF Mono', 'Fira Code', monospace;
@@ -268,10 +275,10 @@ tbody tr:hover {
 .toast {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
+  border-left: 3px solid var(--green);
   border-radius: 8px;
   padding: 0.75rem 1rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   animation: toast-in 0.3s ease, toast-out 0.3s ease 3.7s forwards;
   max-width: 360px;
 }
@@ -279,7 +286,7 @@ tbody tr:hover {
 .toast-event {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--cyan);
   font-family: monospace;
 }
 
