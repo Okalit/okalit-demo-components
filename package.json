@@ -1,6 +1,6 @@
 {
   "name": "@okalit/demo-components",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "type": "module",
   "license": "MIT",
   "main": "./src/okalit-demo-components.js",

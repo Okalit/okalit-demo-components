@@ -151,11 +151,13 @@ export class OkalitDemoComponents extends Okalit {
 
     const el = this._previewEl;
 
-    // Sync attributes
+    // Sync attributes/properties
     for (const [name, value] of Object.entries(this.propValues.value)) {
       if (typeof value === 'boolean') {
         if (value) el.setAttribute(name, '');
         else el.removeAttribute(name);
+      } else if (Array.isArray(value) || (value !== null && typeof value === 'object')) {
+        el[name] = value;
       } else {
         el.setAttribute(name, value);
       }
@@ -250,6 +252,12 @@ export class OkalitDemoComponents extends Okalit {
     }
     if (config.type === Number) {
       return html`<input type="number" .value="${currentValue}" @input="${(e) => this._updatePropValue(name, Number(e.target.value))}" />`;
+    }
+    if (config.type === Array || config.type === Object) {
+      return html`<textarea class="json-input" rows="4" .value="${JSON.stringify(currentValue, null, 2)}" @change="${(e) => {
+        try { this._updatePropValue(name, JSON.parse(e.target.value)); }
+        catch { e.target.classList.add('json-error'); }
+      }}" @input="${(e) => e.target.classList.remove('json-error')}"></textarea>`;
     }
     return html`<input type="text" .value="${currentValue ?? ''}" @input="${(e) => this._updatePropValue(name, e.target.value)}" />`;
   }
