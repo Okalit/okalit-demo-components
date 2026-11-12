@@ -1,7 +1,6 @@
 import { defineConfig } from '@rsbuild/core';
 import { pluginBabel } from '@rsbuild/plugin-babel';
 import { pluginSass } from '@rsbuild/plugin-sass';
-import { fileURLToPath } from 'url';
 
 export default defineConfig({
   plugins: [
